@@ -152,6 +152,18 @@ function broadcast(data) {
     });
 }
 
+// Wire agent timer notifications directly into the HUD broadcast stream
+fridayAgent.onTimerAlert = (alertData) => {
+    broadcast({
+        type: 'command_result',
+        response: {
+            action: 'timer_expired',
+            speechResponse: alertData.message,
+            data: alertData
+        }
+    });
+};
+
 wss.on('connection', (ws) => {
     console.log('[F.R.I.D.A.Y.] HUD Client Connected.');
     

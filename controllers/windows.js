@@ -255,6 +255,19 @@ async function captureScreen() {
     };
 }
 
+async function checkNetwork() {
+    return new Promise((resolve) => {
+        exec('ping -n 1 1.1.1.1', { timeout: 3000 }, (error, stdout) => {
+            if (error || !stdout || !stdout.includes('Reply from')) {
+                resolve({ online: false, ping: null });
+            } else {
+                const match = stdout.match(/time[<=](\d+ms)/i) || stdout.match(/Average = (\d+ms)/i);
+                resolve({ online: true, ping: match ? match[1] : '<50ms' });
+            }
+        });
+    });
+}
+
 function speak(text) {
     if (!text) return;
     const cleanText = text.replace(/["'`$\\]/g, '');
@@ -282,6 +295,7 @@ module.exports = {
     emptyRecycleBin,
     flushDns,
     captureScreen,
+    checkNetwork,
     launchApp,
     openUrl,
     getSystemMetrics,
