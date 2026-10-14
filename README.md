@@ -1,2 +1,2 @@
 # Friday-AI
-"Hey Friday" - Lets Build a Quantum Time Machine (Thanos)
+If you're nothing without the suit, then you shouldn't have it.
