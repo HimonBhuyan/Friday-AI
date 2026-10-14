@@ -178,6 +178,83 @@ async function getSystemMetrics() {
     };
 }
 
+/**
+ * Advanced Windows Automation & Workflow Arsenal
+ */
+async function minimizeAllWindows() {
+    return await runCommand('powershell -NoProfile -Command "(New-Object -ComObject Shell.Application).MinimizeAll()"');
+}
+
+async function undoMinimizeAllWindows() {
+    return await runCommand('powershell -NoProfile -Command "(New-Object -ComObject Shell.Application).UndoMinimizeAll()"');
+}
+
+async function closeActiveWindow() {
+    return await runCommand('powershell -NoProfile -Command "$w = New-Object -ComObject WScript.Shell; $w.SendKeys(\'%{F4}\')"');
+}
+
+async function showDesktop() {
+    return await runCommand('powershell -NoProfile -Command "(New-Object -ComObject Shell.Application).ToggleDesktop()"');
+}
+
+async function killProcess(processName) {
+    let clean = processName.replace(/[\s"']/g, '').toLowerCase();
+    if (!clean.endsWith('.exe')) clean += '.exe';
+    return await runCommand(`taskkill /F /IM ${clean}`);
+}
+
+async function openFolder(folderName) {
+    const userProfile = process.env.USERPROFILE || 'C:\\Users\\User';
+    const folderMap = {
+        downloads: `${userProfile}\\Downloads`,
+        documents: `${userProfile}\\Documents`,
+        desktop: `${userProfile}\\Desktop`,
+        pictures: `${userProfile}\\Pictures`,
+        videos: `${userProfile}\\Videos`,
+        music: `${userProfile}\\Music`,
+        project: process.cwd(),
+        root: 'C:\\'
+    };
+    const target = folderMap[folderName.toLowerCase().trim()] || folderName;
+    return await runCommand(`start "" "${target}"`);
+}
+
+async function getClipboard() {
+    const res = await runCommand('powershell -NoProfile -Command "Get-Clipboard"');
+    return res.success ? res.stdout : '';
+}
+
+async function setClipboard(text) {
+    const clean = text.replace(/["'`$]/g, '');
+    return await runCommand(`powershell -NoProfile -Command "Set-Clipboard -Value '${clean}'"`);
+}
+
+async function emptyRecycleBin() {
+    return await runCommand('powershell -NoProfile -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"');
+}
+
+async function flushDns() {
+    return await runCommand('ipconfig /flushdns');
+}
+
+async function setVolumePercent(percent) {
+    // Volume percent normalized
+    const pct = Math.max(0, Math.min(100, parseInt(percent, 10) || 50));
+    // SAPI / Audio adjustment via nircmd or sendkeys loop
+    const script = `powershell -NoProfile -ExecutionPolicy Bypass -Command "$w = New-Object -ComObject WScript.Shell; 1..50 | ForEach-Object { $w.SendKeys([char]174) }; 1..${Math.round(pct / 2)} | ForEach-Object { $w.SendKeys([char]175) }"`;
+    runCommand(script);
+    return { success: true, percent: pct };
+}
+
+async function captureScreen() {
+    const scriptPath = require('path').join(__dirname, '..', 'scripts', 'capture_screen.ps1');
+    const res = await runCommand(`powershell -NoProfile -ExecutionPolicy Bypass -File "${scriptPath}"`);
+    return {
+        success: res.success,
+        url: '/screenshots/desktop_snap.png?t=' + Date.now()
+    };
+}
+
 function speak(text) {
     if (!text) return;
     const cleanText = text.replace(/["'`$\\]/g, '');
@@ -189,10 +266,22 @@ module.exports = {
     volumeUp,
     volumeDown,
     volumeMute,
+    setVolumePercent,
     mediaPlayPause,
     mediaNext,
     mediaPrev,
     lockWorkstation,
+    minimizeAllWindows,
+    undoMinimizeAllWindows,
+    closeActiveWindow,
+    showDesktop,
+    killProcess,
+    openFolder,
+    getClipboard,
+    setClipboard,
+    emptyRecycleBin,
+    flushDns,
+    captureScreen,
     launchApp,
     openUrl,
     getSystemMetrics,

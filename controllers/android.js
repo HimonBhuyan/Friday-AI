@@ -189,6 +189,44 @@ async function unlockDevice(serial) {
 }
 
 /**
+ * Lock Android device screen
+ */
+async function lockDevice(serial) {
+    const target = serial ? `-s ${serial}` : '';
+    const res = await runAdb(`${target} shell input keyevent 26`);
+    return { success: res.success, message: 'Device locked.' };
+}
+
+/**
+ * Open camera on Android device
+ */
+async function openCamera(serial) {
+    const target = serial ? `-s ${serial}` : '';
+    const res = await runAdb(`${target} shell am start -a android.media.action.STILL_IMAGE_CAMERA`);
+    return { success: res.success };
+}
+
+/**
+ * Initiate phone call
+ */
+async function makeCall(serial, phoneNumber) {
+    const target = serial ? `-s ${serial}` : '';
+    const cleanNum = phoneNumber.replace(/[^0-9+*#]/g, '');
+    const res = await runAdb(`${target} shell am start -a android.intent.action.CALL -d "tel:${cleanNum}"`);
+    return { success: res.success, number: cleanNum };
+}
+
+/**
+ * Toggle Flashlight via Quick Settings or service
+ */
+async function toggleFlashlight(serial, enable = true) {
+    const target = serial ? `-s ${serial}` : '';
+    // Android flashlight tile toggle
+    const res = await runAdb(`${target} shell cmd statusbar click-tile com.android.systemui/.qs.tiles.FlashlightTile`);
+    return { success: res.success };
+}
+
+/**
  * Take screenshot and save to public screenshots folder for live HUD preview
  */
 async function captureScreenshot(serial, outputDir) {
@@ -216,6 +254,10 @@ module.exports = {
     typeText,
     tap,
     unlockDevice,
+    lockDevice,
+    openCamera,
+    makeCall,
+    toggleFlashlight,
     captureScreenshot,
     ANDROID_PACKAGES
 };
