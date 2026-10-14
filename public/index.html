@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="F.R.I.D.A.Y. - Female Replacement Intelligent Digital Assistant Youth. Stark Industries autonomous tactical AI assistant for Windows and Android.">
+    <title>F.R.I.D.A.Y. // Stark Industries Tactical HUD</title>
+    <link rel="stylesheet" href="css/hud.css">
+    <!-- QRious lightweight QR generator for instant mobile sync -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+</head>
+<body>
+
+    <!-- ==================== STARK HUD HEADER ==================== -->
+    <header class="hud-header">
+        <div class="brand-section">
+            <div class="stark-mark">
+                <div class="arc-symbol"></div>
+                <div class="brand-text">
+                    <h1>F.R.I.D.A.Y.</h1>
+                    <div class="brand-sub">STARK INDUSTRIES // MARK LXXXV AUTONOMOUS CORE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-telemetry-pill">
+            <div class="time-box">
+                <div class="time" id="hudClock">00:00:00</div>
+                <div class="date" id="hudDate">MON, OCT 13, 2026</div>
+            </div>
+            <div class="header-actions">
+                <span id="coreStatusBadge" class="status-pill cyan">ONLINE</span>
+                <button id="btnOpenMobileModal" class="btn-cyber" title="Pair Android Phone">
+                    📱 MOBILE SYNC
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN 3-COLUMN TACTICAL HUD ==================== -->
+    <main class="hud-grid">
+
+        <!-- ==================== LEFT: WINDOWS OS & TELEMETRY ==================== -->
+        <section class="hud-panel" aria-label="System Telemetry and Windows Controls">
+            <div class="panel-header">
+                <span class="panel-title">SYSTEM TELEMETRY</span>
+                <span class="status-badge online" id="winStatusBadge">WINDOWS CORE</span>
+            </div>
+
+            <!-- CPU Metric -->
+            <div class="metric-card">
+                <div class="metric-info">
+                    <span class="metric-label">CPU LOAD</span>
+                    <span class="metric-value" id="cpuVal">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" id="cpuBar"></div>
+                </div>
+            </div>
+
+            <!-- RAM Metric -->
+            <div class="metric-card">
+                <div class="metric-info">
+                    <span class="metric-label">MEMORY USAGE</span>
+                    <span class="metric-value" id="ramVal">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" id="ramBar"></div>
+                </div>
+                <div class="metric-sub" id="ramDetail">0 / 0 GB</div>
+            </div>
+
+            <!-- Power / Battery Metric -->
+            <div class="metric-card">
+                <div class="metric-info">
+                    <span class="metric-label">POWER CELL</span>
+                    <span class="metric-value" id="batVal">AC MAINS</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar amber" id="batBar" style="width: 100%;"></div>
+                </div>
+                <div class="metric-sub" id="batState">DIRECT POWER</div>
+            </div>
+
+            <!-- System Info -->
+            <div class="sys-details-list">
+                <div class="sys-detail-row">
+                    <span class="k">LOCAL IP:</span>
+                    <span class="v" id="localIpVal">127.0.0.1</span>
+                </div>
+                <div class="sys-detail-row">
+                    <span class="k">NODE:</span>
+                    <span class="v" id="hostVal">HOST (WINDOWS)</span>
+                </div>
+            </div>
+
+            <!-- Windows Media & Volume Deck -->
+            <div class="panel-header" style="margin-top: 4px;">
+                <span class="panel-title">WINDOWS CONTROLS</span>
+            </div>
+
+            <div class="button-grid-3">
+                <button id="btnVolDown" class="btn-cyber" title="Lower Volume">🔉 VOL -</button>
+                <button id="btnVolMute" class="btn-cyber" title="Mute Volume">🔇 MUTE</button>
+                <button id="btnVolUp" class="btn-cyber" title="Raise Volume">🔊 VOL +</button>
+            </div>
+
+            <div class="button-grid-3">
+                <button id="btnMediaPrev" class="btn-cyber" title="Previous Track">⏮ PREV</button>
+                <button id="btnMediaPlay" class="btn-cyber" title="Play/Pause">⏯ PLAY</button>
+                <button id="btnMediaNext" class="btn-cyber" title="Next Track">⏭ NEXT</button>
+            </div>
+
+            <!-- Windows App Launchers -->
+            <div class="button-grid-2">
+                <button data-launch-app="chrome" class="btn-cyber">🌐 CHROME</button>
+                <button data-launch-app="spotify" class="btn-cyber">🎵 SPOTIFY</button>
+                <button data-launch-app="vscode" class="btn-cyber">💻 VS CODE</button>
+                <button data-launch-app="taskmgr" class="btn-cyber">📊 TASK MGR</button>
+                <button data-launch-app="calc" class="btn-cyber">🔢 CALCULATOR</button>
+                <button data-launch-app="notepad" class="btn-cyber">📝 NOTEPAD</button>
+            </div>
+
+            <!-- Lock Workstation -->
+            <button id="btnLockPc" class="btn-cyber danger" style="margin-top: auto;">
+                🔒 LOCK WORKSTATION
+            </button>
+        </section>
+
+        <!-- ==================== CENTER: ARC REACTOR & VOICE CORE ==================== -->
+        <section class="hud-panel center-deck" aria-label="Arc Reactor Core and Voice Control">
+            
+            <div class="panel-header" style="width: 100%;">
+                <span class="panel-title">F.R.I.D.A.Y. NEURAL CORE</span>
+                <span class="status-badge online" id="micStatusBadge">HANDS-FREE ON</span>
+            </div>
+
+            <!-- Holographic Arc Reactor -->
+            <div class="reactor-wrapper">
+                <div class="arc-reactor listening" id="starkArcReactor">
+                    <div class="ring-outer"></div>
+                    <div class="ring-segments"></div>
+                    <div class="ring-inner"></div>
+                    <div class="reactor-core" id="reactorCore" title="Click to Toggle Hands-Free Microphone">
+                        <div class="core-emblem">STARK</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Readout -->
+            <div class="reactor-status-box">
+                <div class="status-label" id="reactorStatusText">LISTENING</div>
+                <div class="live-transcript-box" id="liveSpeechTranscript">
+                    Hands-Free Active: Say "Hey Friday" or "Friday"...
+                </div>
+            </div>
+
+            <!-- Diagnostic Alert Box (shows if microphone is blocked or network issues occur) -->
+            <div class="mic-diag-box" id="micDiagnosticBox" style="display: none;">
+                <span class="mic-diag-icon">⚠️</span>
+                <span class="mic-diag-text" id="micDiagnosticMsg"></span>
+                <button class="btn-micro" onclick="window.voiceEngine.startListening()">RETRY</button>
+            </div>
+
+            <!-- Hardware Microphone VU Level Meter -->
+            <div class="mic-meter-container" id="micMeterContainer">
+                <div class="mic-meter-header">
+                    <span class="mic-meter-title">🎙 MIC INPUT LEVEL:</span>
+                    <span class="mic-meter-val" id="micMeterText">0% [SILENT]</span>
+                </div>
+                <div class="mic-meter-track">
+                    <div class="mic-meter-fill" id="micMeterFill"></div>
+                </div>
+            </div>
+
+            <!-- Holographic Frequency Equalizer Canvas -->
+            <div class="visualizer-box">
+                <canvas id="equalizerCanvas"></canvas>
+            </div>
+
+            <!-- Voice & Command Input Deck -->
+            <div class="input-control-deck">
+                <div class="command-bar">
+                    <button id="micToggleBtn" class="mic-btn" title="Click to Speak / Push-to-Talk (Wake word: Hey Friday)">
+                        🎙
+                    </button>
+                    <div class="text-input-wrapper">
+                        <input type="text" id="commandTextInput" placeholder="Issue tactical command or say 'Hey Friday'..." autocomplete="off">
+                        <button id="sendCmdBtn" class="send-btn">TRANSMIT</button>
+                    </div>
+                </div>
+
+                <!-- Quick Prompt Pills & Stark Protocols -->
+                <div class="prompt-pills-row">
+                    <span class="prompt-pill" data-prompt="barn burner protocol">🚀 Barn Burner Protocol</span>
+                    <span class="prompt-pill" data-prompt="play rock music">🎸 AC/DC Rock</span>
+                    <span class="prompt-pill" data-prompt="stealth mode">🛡 Stealth Mode</span>
+                    <span class="prompt-pill" data-prompt="scan systems">⚡ Tactical Scan</span>
+                    <span class="prompt-pill" data-prompt="check battery">🔋 Power Cell</span>
+                    <span class="prompt-pill" data-prompt="volume up">🔊 Volume Up</span>
+                    <span class="prompt-pill" data-prompt="unlock phone">📱 Unlock Phone</span>
+                    <span class="prompt-pill" data-prompt="who are you">🤖 Mark LXXXV Core</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==================== RIGHT: ANDROID CONTROL & TERMINAL ==================== -->
+        <section class="hud-panel" aria-label="Android Bridge and Tactical Log">
+            
+            <!-- Android Bridge Header -->
+            <div class="panel-header">
+                <span class="panel-title">ANDROID BRIDGE</span>
+                <span class="status-badge standby" id="androidCountBadge">0 LINKED</span>
+            </div>
+
+            <!-- Connected Android Devices List -->
+            <div class="android-deck" id="androidDevicesList">
+                <div class="empty-state">
+                    <div class="empty-icon">📱</div>
+                    <div class="empty-title">SCANNING ANDROID BUS...</div>
+                    <div class="empty-desc">Connect phone via USB or enter Wi-Fi Debugging IP below to authorize Friday wireless bridge.</div>
+                </div>
+            </div>
+
+            <!-- Wireless ADB Connect Box -->
+            <div class="adb-connect-row">
+                <input type="text" id="adbIpInput" class="adb-input" placeholder="Phone IP:Port (e.g. 192.168.1.5:5555)">
+                <button id="btnAdbConnect" class="btn-micro">PAIR</button>
+            </div>
+
+            <!-- Tactical Terminal Log Stream -->
+            <div class="panel-header" style="margin-top: 6px;">
+                <span class="panel-title">TACTICAL STREAM</span>
+                <span class="action-pill" id="lastActionPill">IDLE</span>
+            </div>
+
+            <div class="terminal-panel">
+                <div class="terminal-stream" id="terminalStream">
+                    <div class="log-line log-system">
+                        <span class="log-prefix">[INIT]</span>
+                        <span class="log-text">Mark LXXXV Tactical OS initialized. Awaiting user voice or telemetry.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio & Voice Config -->
+            <div class="settings-row">
+                <span>FRIDAY VOICE:</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <select id="voiceSelect" class="cyber-select">
+                        <option>Detecting voices...</option>
+                    </select>
+                    <button id="btnTestVoice" class="btn-micro" title="Test F.R.I.D.A.Y. Voice Output">🔊 TEST</button>
+                </div>
+            </div>
+
+            <div class="settings-row">
+                <span>AUDIO ENGINE:</span>
+                <div style="display: flex; gap: 6px;">
+                    <button id="btnVoiceBrowser" class="btn-micro active" style="background: rgba(0, 242, 254, 0.25);">BROWSER</button>
+                    <button id="btnVoiceWindows" class="btn-micro">WINDOWS SAPI</button>
+                </div>
+            </div>
+
+            <div class="settings-row">
+                <span>STARK HUD SOUND FX:</span>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" id="sfxToggleCheckbox" checked>
+                    <span style="font-size: 0.75rem; color: var(--cyan-primary);">ENABLED</span>
+                </label>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==================== MOBILE PAIRING MODAL ==================== -->
+    <div id="mobilePairModal" class="hud-modal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="panel-title">ANDROID COMPANION SYNC</h3>
+                <button id="btnCloseMobileModal" class="btn-close">✕</button>
+            </div>
+            <div class="qr-box">
+                <p style="font-size: 0.85rem; color: #8da4be;">
+                    Scan this QR code with your phone camera or browser on the same Wi-Fi network to open FRIDAY on your phone:
+                </p>
+                <div class="qr-frame">
+                    <canvas id="qrCodeCanvas"></canvas>
+                </div>
+                <a id="mobileCompanionLink" class="qr-link-text" href="#" target="_blank">http://127.0.0.1:3000</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SCREENSHOT PREVIEW MODAL ==================== -->
+    <div id="screenshotModal" class="hud-modal" aria-hidden="true">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="panel-title">ANDROID SCREEN CAPTURE</h3>
+                <button class="btn-close" onclick="document.getElementById('screenshotModal').classList.remove('visible')">✕</button>
+            </div>
+            <div style="text-align: center;">
+                <img id="screenshotPreviewImg" src="" alt="Android Screen Capture" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-cyan);">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/sound_effects.js"></script>
+    <script src="js/audio_visualizer.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/socket_client.js"></script>
+    <script src="js/hud.js"></script>
+
+    <!-- Auto QR Generator setup -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const qrCanvas = document.getElementById('qrCodeCanvas');
+            const updateQr = () => {
+                const link = document.getElementById('mobileCompanionLink');
+                if (link && qrCanvas && window.QRious) {
+                    new QRious({
+                        element: qrCanvas,
+                        value: link.href || window.location.href,
+                        size: 180,
+                        background: '#ffffff',
+                        foreground: '#040711'
+                    });
+                }
+            };
+            setTimeout(updateQr, 800);
+        });
+    </script>
+</body>
+</html>
