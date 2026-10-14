@@ -1,0 +1,23 @@
+{
+  "name": "F.R.I.D.A.Y. // Stark Industries",
+  "short_name": "FRIDAY",
+  "description": "Stark Industries Tactical Mark LXXXV AI Assistant Core",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050a12",
+  "theme_color": "#00f0ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

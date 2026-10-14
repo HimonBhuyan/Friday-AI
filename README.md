@@ -20,11 +20,20 @@ npm start
   * **Windows Desktop HUD**: [http://localhost:3000](http://localhost:3000)
   * **Android Mobile Sync**: `http://<your-ip>:3000` (displayed in your console and HUD header)
 
-### 2. Connect Your Android Phone
-1. **Mobile HUD**: Connect your phone to the same Wi-Fi and open `http://<your-ip>:3000`, or click **"MOBILE SYNC"** in the desktop HUD to scan the instant QR code!
-2. **Wireless ADB Control (Optional Zero-Touch OS Automation)**:
-   - On Android, enable **Developer Options** > **Wireless Debugging** (or USB Debugging).
-   - Enter your phone's IP and port in the **ANDROID BRIDGE** deck on the HUD and click **PAIR**.
+### 2. Android Version (Two Ways to Deploy)
+
+#### Option A: Instant 1-Tap Mobile Install (Progressive Web App)
+1. Ensure your phone is connected to the same Wi-Fi.
+2. Open `http://<your-ip>:3000` in Android Chrome/Edge (or scan the **MOBILE SYNC** QR code on the desktop HUD).
+3. Tap the **"📲 INSTALL ANDROID APP"** button or Chrome menu > **"Add to Home Screen"**.
+4. F.R.I.D.A.Y. is now installed as a standalone full-screen Android app with the glowing Arc Reactor icon on your phone!
+
+#### Option B: Full Native Android Studio App & APK
+Located in the [`android/`](file:///c:/xampp/htdocs/Friday%28Tony%29/android) directory:
+- **Build APK via Command Line**: Run [`android/build_apk.bat`](file:///c:/xampp/htdocs/Friday%28Tony%29/android/build_apk.bat).
+- **Deploy to phone**: `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`
+- **Or Open in Android Studio**: Open the `android` folder in Android Studio and click **Run**.
+- **Native Features**: Hardware Flashlight control, Device Vibrator, Foreground Service notification, native TextToSpeech engine, Camera launcher.
 
 ---
 

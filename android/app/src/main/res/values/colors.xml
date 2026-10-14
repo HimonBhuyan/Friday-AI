@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stark_black">#050A12</color>
+    <color name="stark_cyan">#00F0FF</color>
+    <color name="stark_gold">#FFB800</color>
+    <color name="stark_accent">#0080FF</color>
+    <color name="stark_dark_surface">#0A1424</color>
+</resources>

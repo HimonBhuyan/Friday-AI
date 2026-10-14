@@ -5,3 +5,8 @@ data/memory.json
 *.log
 .DS_Store
 Thumbs.db
+.gradle/
+android/local.properties
+android/**/build/
+android/.gradle/
+*.apk

@@ -439,3 +439,43 @@ function flashActionIndicator(action) {
 function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+// ---------------- PWA & Android Installation ----------------
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[PWA] Service Worker active:', reg.scope))
+            .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
+    });
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    addTerminalLog("MOBILE DETECTED: Tap 'INSTALL APP' to add F.R.I.D.A.Y. to your Android home screen.", "system");
+    
+    // Add quick install button if not exists
+    let installBtn = document.getElementById('pwaInstallBtn');
+    if (!installBtn) {
+        installBtn = document.createElement('button');
+        installBtn.id = 'pwaInstallBtn';
+        installBtn.className = 'btn-stark install-btn';
+        installBtn.innerHTML = '📲 INSTALL ANDROID APP';
+        installBtn.style.marginTop = '10px';
+        installBtn.onclick = async () => {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') {
+                    addTerminalLog("STARK CORE: F.R.I.D.A.Y. installed on Android device.", "friday");
+                    installBtn.remove();
+                }
+                deferredInstallPrompt = null;
+            }
+        };
+        const controls = document.querySelector('.controls-section');
+        if (controls) controls.appendChild(installBtn);
+    }
+});
+
